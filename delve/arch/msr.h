@@ -15,6 +15,8 @@ union __ia32_efer_t
     } bits;
 };
 
+#define IA32_FEATURE_CONTROL 0x3A
+
 union __ia32_feature_control_msr_t
 {
     unsigned __int64 control;

@@ -148,6 +148,7 @@
     <ClInclude Include="arch\dr.h" />
     <ClInclude Include="arch\msr.h" />
     <ClInclude Include="arch\rflags.h" />
+    <ClInclude Include="arch\vcpu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -47,5 +47,8 @@
     <ClInclude Include="arch\cr.h">
       <Filter>Header Files\arch</Filter>
     </ClInclude>
+    <ClInclude Include="arch\vcpu.h">
+      <Filter>Header Files\arch</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
