@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Driver Files">
+      <UniqueIdentifier>{8E41214B-6785-4CFE-B992-037D68949A14}</UniqueIdentifier>
+      <Extensions>inf;inv;inx;mof;mc;</Extensions>
+    </Filter>
+    <Filter Include="Header Files\defs">
+      <UniqueIdentifier>{1d20b943-e147-4489-98cf-1da45799c44c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\defs\ctl_regs">
+      <UniqueIdentifier>{bbe2ea32-4d12-4873-941c-d98904253db8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\defs\dbg_regs">
+      <UniqueIdentifier>{127760be-68a4-471a-8678-27ee43f838b1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Inf Include="delve.inf">
+      <Filter>Driver Files</Filter>
+    </Inf>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="defs\efer.h">
+      <Filter>Header Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\control.h">
+      <Filter>Header Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\vmx_misc.h">
+      <Filter>Header Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\vmx_basic.h">
+      <Filter>Header Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\vmx_exit.h">
+      <Filter>Header Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\vmx_sec_proc.h">
+      <Filter>Header Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\vmx_pri_proc.h">
+      <Filter>Header Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\vmx_pin_ctl.h">
+      <Filter>Header Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\vmx_entry.h">
+      <Filter>Header Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\ctl_regs\cr0.h">
+      <Filter>Header Files\defs\ctl_regs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\ctl_regs\cr4.h">
+      <Filter>Header Files\defs\ctl_regs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\ctl_regs\cr3.h">
+      <Filter>Header Files\defs\ctl_regs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\ctl_regs\cr8.h">
+      <Filter>Header Files\defs\ctl_regs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\dbg_regs\drx.h">
+      <Filter>Header Files\defs\dbg_regs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\dbg_regs\dr6.h">
+      <Filter>Header Files\defs\dbg_regs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\dbg_regs\dr7.h">
+      <Filter>Header Files\defs\dbg_regs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\cpuid.h">
+      <Filter>Header Files\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="defs\rflags.h">
+      <Filter>Header Files\defs</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
