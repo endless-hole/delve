@@ -143,24 +143,11 @@
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="defs\control.h" />
-    <ClInclude Include="defs\cpuid.h" />
-    <ClInclude Include="defs\ctl_regs\cr0.h" />
-    <ClInclude Include="defs\ctl_regs\cr3.h" />
-    <ClInclude Include="defs\ctl_regs\cr4.h" />
-    <ClInclude Include="defs\ctl_regs\cr8.h" />
-    <ClInclude Include="defs\dbg_regs\dr6.h" />
-    <ClInclude Include="defs\dbg_regs\dr7.h" />
-    <ClInclude Include="defs\dbg_regs\drx.h" />
-    <ClInclude Include="defs\efer.h" />
-    <ClInclude Include="defs\rflags.h" />
-    <ClInclude Include="defs\vmx_basic.h" />
-    <ClInclude Include="defs\vmx_entry.h" />
-    <ClInclude Include="defs\vmx_exit.h" />
-    <ClInclude Include="defs\vmx_misc.h" />
-    <ClInclude Include="defs\vmx_pin_ctl.h" />
-    <ClInclude Include="defs\vmx_pri_proc.h" />
-    <ClInclude Include="defs\vmx_sec_proc.h" />
+    <ClInclude Include="arch\cpuid.h" />
+    <ClInclude Include="arch\cr.h" />
+    <ClInclude Include="arch\dr.h" />
+    <ClInclude Include="arch\msr.h" />
+    <ClInclude Include="arch\rflags.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

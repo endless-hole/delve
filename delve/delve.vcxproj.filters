@@ -17,14 +17,8 @@
       <UniqueIdentifier>{8E41214B-6785-4CFE-B992-037D68949A14}</UniqueIdentifier>
       <Extensions>inf;inv;inx;mof;mc;</Extensions>
     </Filter>
-    <Filter Include="Header Files\defs">
-      <UniqueIdentifier>{1d20b943-e147-4489-98cf-1da45799c44c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\defs\ctl_regs">
-      <UniqueIdentifier>{bbe2ea32-4d12-4873-941c-d98904253db8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\defs\dbg_regs">
-      <UniqueIdentifier>{127760be-68a4-471a-8678-27ee43f838b1}</UniqueIdentifier>
+    <Filter Include="Header Files\arch">
+      <UniqueIdentifier>{12d64b23-32f6-46a4-9d06-95ddbe66fe23}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -38,59 +32,20 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="defs\efer.h">
-      <Filter>Header Files\defs</Filter>
+    <ClInclude Include="arch\dr.h">
+      <Filter>Header Files\arch</Filter>
     </ClInclude>
-    <ClInclude Include="defs\control.h">
-      <Filter>Header Files\defs</Filter>
+    <ClInclude Include="arch\msr.h">
+      <Filter>Header Files\arch</Filter>
     </ClInclude>
-    <ClInclude Include="defs\vmx_misc.h">
-      <Filter>Header Files\defs</Filter>
+    <ClInclude Include="arch\rflags.h">
+      <Filter>Header Files\arch</Filter>
     </ClInclude>
-    <ClInclude Include="defs\vmx_basic.h">
-      <Filter>Header Files\defs</Filter>
+    <ClInclude Include="arch\cpuid.h">
+      <Filter>Header Files\arch</Filter>
     </ClInclude>
-    <ClInclude Include="defs\vmx_exit.h">
-      <Filter>Header Files\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\vmx_sec_proc.h">
-      <Filter>Header Files\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\vmx_pri_proc.h">
-      <Filter>Header Files\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\vmx_pin_ctl.h">
-      <Filter>Header Files\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\vmx_entry.h">
-      <Filter>Header Files\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\ctl_regs\cr0.h">
-      <Filter>Header Files\defs\ctl_regs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\ctl_regs\cr4.h">
-      <Filter>Header Files\defs\ctl_regs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\ctl_regs\cr3.h">
-      <Filter>Header Files\defs\ctl_regs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\ctl_regs\cr8.h">
-      <Filter>Header Files\defs\ctl_regs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\dbg_regs\drx.h">
-      <Filter>Header Files\defs\dbg_regs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\dbg_regs\dr6.h">
-      <Filter>Header Files\defs\dbg_regs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\dbg_regs\dr7.h">
-      <Filter>Header Files\defs\dbg_regs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\cpuid.h">
-      <Filter>Header Files\defs</Filter>
-    </ClInclude>
-    <ClInclude Include="defs\rflags.h">
-      <Filter>Header Files\defs</Filter>
+    <ClInclude Include="arch\cr.h">
+      <Filter>Header Files\arch</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 #include <ntddk.h>
-#include "defs/cpuid.h"
+#include "arch/cpuid.h"
 
 void log_debug( const char* fmt, ... ){
     va_list args;
