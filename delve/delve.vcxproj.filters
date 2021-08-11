@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -17,8 +9,15 @@
       <UniqueIdentifier>{8E41214B-6785-4CFE-B992-037D68949A14}</UniqueIdentifier>
       <Extensions>inf;inv;inx;mof;mc;</Extensions>
     </Filter>
-    <Filter Include="Header Files\arch">
-      <UniqueIdentifier>{12d64b23-32f6-46a4-9d06-95ddbe66fe23}</UniqueIdentifier>
+    <Filter Include="Main">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ksocket">
+      <UniqueIdentifier>{75c9cdb7-2c7c-44ed-88b0-727a0ac84b16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\process">
+      <UniqueIdentifier>{e9eede3e-171f-4572-a1c5-4fb49d48671b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -27,28 +26,49 @@
     </Inf>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ksocket\ksocket.c">
+      <Filter>ksocket</Filter>
+    </ClCompile>
+    <ClCompile Include="ksocket\berkeley.c">
+      <Filter>ksocket</Filter>
+    </ClCompile>
+    <ClCompile Include="server.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="packet_handler.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="arch\dr.h">
-      <Filter>Header Files\arch</Filter>
+    <ClInclude Include="log.h">
+      <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="arch\msr.h">
-      <Filter>Header Files\arch</Filter>
+    <ClInclude Include="ksocket\berkeley.h">
+      <Filter>ksocket</Filter>
     </ClInclude>
-    <ClInclude Include="arch\rflags.h">
-      <Filter>Header Files\arch</Filter>
+    <ClInclude Include="ksocket\ksocket.h">
+      <Filter>ksocket</Filter>
     </ClInclude>
-    <ClInclude Include="arch\cpuid.h">
-      <Filter>Header Files\arch</Filter>
+    <ClInclude Include="server_shared.h">
+      <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="arch\cr.h">
-      <Filter>Header Files\arch</Filter>
+    <ClInclude Include="stdint.h">
+      <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="arch\vcpu.h">
-      <Filter>Header Files\arch</Filter>
+    <ClInclude Include="socket.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="imports.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="process\process.h">
+      <Filter>Main\process</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
