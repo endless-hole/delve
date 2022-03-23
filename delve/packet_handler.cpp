@@ -7,7 +7,6 @@
 #include "memory/vad_routines.h"
 #include "memory/memory.hpp"
 #include "memory/pattern.hpp"
-#include "memory/rwmemory.hpp"
 
 #pragma warning(disable : 4505)
 

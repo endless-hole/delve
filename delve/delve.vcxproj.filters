@@ -84,6 +84,5 @@
     <ClInclude Include="memory\memory.hpp" />
     <ClInclude Include="memory\pattern.hpp" />
     <ClInclude Include="memory\nt.hpp" />
-    <ClInclude Include="memory\rwmemory.hpp" />
   </ItemGroup>
 </Project>

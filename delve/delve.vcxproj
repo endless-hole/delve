@@ -202,7 +202,6 @@
     <ClInclude Include="memory\memory.hpp" />
     <ClInclude Include="memory\nt.hpp" />
     <ClInclude Include="memory\pattern.hpp" />
-    <ClInclude Include="memory\rwmemory.hpp" />
     <ClInclude Include="memory\undoc_structs.h" />
     <ClInclude Include="memory\vad_routines.h" />
     <ClInclude Include="process\process.h" />
