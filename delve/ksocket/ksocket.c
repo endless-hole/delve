@@ -41,7 +41,7 @@ typedef struct _KSOCKET
 
 WSK_REGISTRATION     WskRegistration;
 WSK_PROVIDER_NPI     WskProvider;
-WSK_CLIENT_DISPATCH  WskDispatch = { MAKE_WSK_VERSION(1,0), 0, NULL };
+WSK_CLIENT_DISPATCH  WskDispatch = { MAKE_WSK_VERSION( 1,0 ), 0, NULL };
 
 //////////////////////////////////////////////////////////////////////////
 // Function prototypes.
@@ -104,9 +104,9 @@ KspAsyncContextAllocate(
     // Initialize the IRP.
     //
 
-    AsyncContext->Irp = IoAllocateIrp(1, FALSE);
+    AsyncContext->Irp = IoAllocateIrp( 1, FALSE );
 
-    if (AsyncContext->Irp == NULL)
+    if( AsyncContext->Irp == NULL )
     {
         return STATUS_INSUFFICIENT_RESOURCES;
     }
@@ -138,7 +138,7 @@ KspAsyncContextFree(
     // Free the IRP.
     //
 
-    IoFreeIrp(AsyncContext->Irp);
+    IoFreeIrp( AsyncContext->Irp );
 }
 
 VOID
@@ -170,13 +170,13 @@ KspAsyncContextReset(
     // Reset the completion event.
     //
 
-    KeResetEvent(&AsyncContext->CompletionEvent);
+    KeResetEvent( &AsyncContext->CompletionEvent );
 
     //
     // Reuse the IRP.
     //
 
-    IoReuseIrp(AsyncContext->Irp, STATUS_UNSUCCESSFUL);
+    IoReuseIrp( AsyncContext->Irp, STATUS_UNSUCCESSFUL );
 
     IoSetCompletionRoutine(
         AsyncContext->Irp,
@@ -196,10 +196,10 @@ KspAsyncContextCompletionRoutine(
     _In_ PKEVENT CompletionEvent
 )
 {
-    UNREFERENCED_PARAMETER(DeviceObject);
-    UNREFERENCED_PARAMETER(Irp);
+    UNREFERENCED_PARAMETER( DeviceObject );
+    UNREFERENCED_PARAMETER( Irp );
 
-    KeSetEvent(CompletionEvent, IO_NO_INCREMENT, FALSE);
+    KeSetEvent( CompletionEvent, IO_NO_INCREMENT, FALSE );
     return STATUS_MORE_PROCESSING_REQUIRED;
 }
 
@@ -210,7 +210,7 @@ KspAsyncContextWaitForCompletion(
     _Inout_ PNTSTATUS Status
 )
 {
-    if (*Status == STATUS_PENDING)
+    if( *Status == STATUS_PENDING )
     {
         KeWaitForSingleObject(
             &AsyncContext->CompletionEvent,
@@ -246,9 +246,9 @@ KsInitialize(
     WskClient.ClientContext = NULL;
     WskClient.Dispatch = &WskDispatch;
 
-    Status = WskRegister(&WskClient, &WskRegistration);
+    Status = WskRegister( &WskClient, &WskRegistration );
 
-    if (!NT_SUCCESS(Status))
+    if( !NT_SUCCESS( Status ) )
     {
         return Status;
     }
@@ -274,13 +274,13 @@ KsDestroy(
     // Release the provider NPI instance.
     //
 
-    WskReleaseProviderNPI(&WskRegistration);
+    WskReleaseProviderNPI( &WskRegistration );
 
     //
     // Deregister as a WSK client.
     //
 
-    WskDeregister(&WskRegistration);
+    WskDeregister( &WskRegistration );
 }
 
 NTSTATUS
@@ -299,9 +299,9 @@ KsGetAddrInfo(
     //
 
     KSOCKET_ASYNC_CONTEXT AsyncContext;
-    Status = KspAsyncContextAllocate(&AsyncContext);
+    Status = KspAsyncContextAllocate( &AsyncContext );
 
-    if (!NT_SUCCESS(Status))
+    if( !NT_SUCCESS( Status ) )
     {
         return Status;
     }
@@ -323,13 +323,13 @@ KsGetAddrInfo(
         AsyncContext.Irp            // Irp
     );
 
-    KspAsyncContextWaitForCompletion(&AsyncContext, &Status);
+    KspAsyncContextWaitForCompletion( &AsyncContext, &Status );
 
     //
     // Free the async context.
     //
 
-    KspAsyncContextFree(&AsyncContext);
+    KspAsyncContextFree( &AsyncContext );
 
     return Status;
 }
@@ -362,9 +362,9 @@ KsCreateSocket(
     // Allocate memory for the socket structure.
     //
 
-    PKSOCKET NewSocket = ExAllocatePoolWithTag(PagedPool, sizeof(KSOCKET), MEMORY_TAG);
+    PKSOCKET NewSocket = ExAllocatePoolWithTag( PagedPool, sizeof( KSOCKET ), MEMORY_TAG );
 
-    if (!NewSocket)
+    if( !NewSocket )
     {
         return STATUS_INSUFFICIENT_RESOURCES;
     }
@@ -373,9 +373,9 @@ KsCreateSocket(
     // Allocate async context for the socket.
     //
 
-    Status = KspAsyncContextAllocate(&NewSocket->AsyncContext);
+    Status = KspAsyncContextAllocate( &NewSocket->AsyncContext );
 
-    if (!NT_SUCCESS(Status))
+    if( !NT_SUCCESS( Status ) )
     {
         return Status;
     }
@@ -398,16 +398,16 @@ KsCreateSocket(
         NewSocket->AsyncContext.Irp // Irp
     );
 
-    KspAsyncContextWaitForCompletion(&NewSocket->AsyncContext, &Status);
+    KspAsyncContextWaitForCompletion( &NewSocket->AsyncContext, &Status );
 
     //
     // Save the socket instance and the socket dispatch table.
     //
 
-    if (NT_SUCCESS(Status))
+    if( NT_SUCCESS( Status ) )
     {
-        NewSocket->WskSocket = (PWSK_SOCKET)NewSocket->AsyncContext.Irp->IoStatus.Information;
-        NewSocket->WskDispatch = (PVOID)NewSocket->WskSocket->Dispatch;
+        NewSocket->WskSocket = ( PWSK_SOCKET )NewSocket->AsyncContext.Irp->IoStatus.Information;
+        NewSocket->WskDispatch = ( PVOID )NewSocket->WskSocket->Dispatch;
 
         *Socket = NewSocket;
     }
@@ -424,7 +424,7 @@ KsCreateConnectionSocket(
     _In_ ULONG Protocol
 )
 {
-    return KsCreateSocket(Socket, AddressFamily, SocketType, Protocol, WSK_FLAG_CONNECTION_SOCKET);
+    return KsCreateSocket( Socket, AddressFamily, SocketType, Protocol, WSK_FLAG_CONNECTION_SOCKET );
 }
 
 NTSTATUS
@@ -436,7 +436,7 @@ KsCreateListenSocket(
     _In_ ULONG Protocol
 )
 {
-    return KsCreateSocket(Socket, AddressFamily, SocketType, Protocol, WSK_FLAG_LISTEN_SOCKET);
+    return KsCreateSocket( Socket, AddressFamily, SocketType, Protocol, WSK_FLAG_LISTEN_SOCKET );
 }
 
 NTSTATUS
@@ -448,7 +448,7 @@ KsCreateDatagramSocket(
     _In_ ULONG Protocol
 )
 {
-    return KsCreateSocket(Socket, AddressFamily, SocketType, Protocol, WSK_FLAG_DATAGRAM_SOCKET);
+    return KsCreateSocket( Socket, AddressFamily, SocketType, Protocol, WSK_FLAG_DATAGRAM_SOCKET );
 }
 
 NTSTATUS
@@ -463,7 +463,7 @@ KsCloseSocket(
     // Reset the async context.
     //
 
-    KspAsyncContextReset(&Socket->AsyncContext);
+    KspAsyncContextReset( &Socket->AsyncContext );
 
     //
     // Close the WSK socket.
@@ -474,19 +474,19 @@ KsCloseSocket(
         Socket->AsyncContext.Irp
     );
 
-    KspAsyncContextWaitForCompletion(&Socket->AsyncContext, &Status);
+    KspAsyncContextWaitForCompletion( &Socket->AsyncContext, &Status );
 
     //
     // Free the async context.
     //
 
-    KspAsyncContextFree(&Socket->AsyncContext);
+    KspAsyncContextFree( &Socket->AsyncContext );
 
     //
     // Free memory for the socket structure.
     //
 
-    ExFreePoolWithTag(Socket, MEMORY_TAG);
+    ExFreePoolWithTag( Socket, MEMORY_TAG );
 
     return Status;
 }
@@ -504,7 +504,7 @@ KsBind(
     // Reset the async context.
     //
 
-    KspAsyncContextReset(&Socket->AsyncContext);
+    KspAsyncContextReset( &Socket->AsyncContext );
 
     //
     // Bind the socket.
@@ -517,7 +517,7 @@ KsBind(
         Socket->AsyncContext.Irp    // Irp
     );
 
-    KspAsyncContextWaitForCompletion(&Socket->AsyncContext, &Status);
+    KspAsyncContextWaitForCompletion( &Socket->AsyncContext, &Status );
 
     return Status;
 }
@@ -537,7 +537,7 @@ KsAccept(
     // Reset the async context.
     //
 
-    KspAsyncContextReset(&Socket->AsyncContext);
+    KspAsyncContextReset( &Socket->AsyncContext );
 
     //
     // Accept the connection.
@@ -553,24 +553,24 @@ KsAccept(
         Socket->AsyncContext.Irp    // Irp
     );
 
-    KspAsyncContextWaitForCompletion(&Socket->AsyncContext, &Status);
+    KspAsyncContextWaitForCompletion( &Socket->AsyncContext, &Status );
 
     //
     // Save the socket instance and the socket dispatch table.
     //
 
-    if (NT_SUCCESS(Status))
+    if( NT_SUCCESS( Status ) )
     {
-        PKSOCKET KNewSocket = ExAllocatePoolWithTag(PagedPool, sizeof(KSOCKET), MEMORY_TAG);
+        PKSOCKET KNewSocket = ExAllocatePoolWithTag( PagedPool, sizeof( KSOCKET ), MEMORY_TAG );
 
-        if (!KNewSocket)
+        if( !KNewSocket )
         {
             return STATUS_INSUFFICIENT_RESOURCES;
         }
 
-        KNewSocket->WskSocket = (PWSK_SOCKET)Socket->AsyncContext.Irp->IoStatus.Information;
-        KNewSocket->WskDispatch = (PVOID)KNewSocket->WskSocket->Dispatch;
-        KspAsyncContextAllocate(&KNewSocket->AsyncContext);
+        KNewSocket->WskSocket = ( PWSK_SOCKET )Socket->AsyncContext.Irp->IoStatus.Information;
+        KNewSocket->WskDispatch = ( PVOID )KNewSocket->WskSocket->Dispatch;
+        KspAsyncContextAllocate( &KNewSocket->AsyncContext );
 
         *NewSocket = KNewSocket;
     }
@@ -591,7 +591,7 @@ KsConnect(
     // Reset the async context.
     //
 
-    KspAsyncContextReset(&Socket->AsyncContext);
+    KspAsyncContextReset( &Socket->AsyncContext );
 
     //
     // Bind the socket to the local address.
@@ -604,14 +604,14 @@ KsConnect(
 
     Status = Socket->WskConnectionDispatch->WskBind(
         Socket->WskSocket,          // Socket
-        (PSOCKADDR)&LocalAddress,   // LocalAddress
+        ( PSOCKADDR )&LocalAddress,   // LocalAddress
         0,                          // Flags (reserved)
         Socket->AsyncContext.Irp    // Irp
     );
 
-    KspAsyncContextWaitForCompletion(&Socket->AsyncContext, &Status);
+    KspAsyncContextWaitForCompletion( &Socket->AsyncContext, &Status );
 
-    if (!NT_SUCCESS(Status))
+    if( !NT_SUCCESS( Status ) )
     {
         return Status;
     }
@@ -620,7 +620,7 @@ KsConnect(
     // Reset the async context (again).
     //
 
-    KspAsyncContextReset(&Socket->AsyncContext);
+    KspAsyncContextReset( &Socket->AsyncContext );
 
     //
     // Connect to the remote host.
@@ -636,7 +636,7 @@ KsConnect(
         Socket->AsyncContext.Irp    // Irp
     );
 
-    KspAsyncContextWaitForCompletion(&Socket->AsyncContext, &Status);
+    KspAsyncContextWaitForCompletion( &Socket->AsyncContext, &Status );
 
     return Status;
 }
@@ -660,13 +660,13 @@ KsSendRecv(
     WSK_BUF WskBuffer;
     WskBuffer.Offset = 0;
     WskBuffer.Length = *Length;
-    WskBuffer.Mdl = IoAllocateMdl(Buffer, (ULONG)WskBuffer.Length, FALSE, FALSE, NULL);
+    WskBuffer.Mdl = IoAllocateMdl( Buffer, ( ULONG )WskBuffer.Length, FALSE, FALSE, NULL );
 
     __try
     {
-        MmProbeAndLockPages(WskBuffer.Mdl, KernelMode, IoWriteAccess);
+        MmProbeAndLockPages( WskBuffer.Mdl, KernelMode, IoWriteAccess );
     }
-    __except (EXCEPTION_EXECUTE_HANDLER)
+    __except( EXCEPTION_EXECUTE_HANDLER )
     {
         Status = STATUS_ACCESS_VIOLATION;
         goto Error;
@@ -676,13 +676,13 @@ KsSendRecv(
     // Reset the async context.
     //
 
-    KspAsyncContextReset(&Socket->AsyncContext);
+    KspAsyncContextReset( &Socket->AsyncContext );
 
     //
     // Send / receive the data.
     //
 
-    if (Send)
+    if( Send )
     {
         Status = Socket->WskConnectionDispatch->WskSend(
             Socket->WskSocket,        // Socket
@@ -701,25 +701,25 @@ KsSendRecv(
         );
     }
 
-    KspAsyncContextWaitForCompletion(&Socket->AsyncContext, &Status);
+    KspAsyncContextWaitForCompletion( &Socket->AsyncContext, &Status );
 
     //
     // Set the number of bytes sent / received.
     //
 
-    if (NT_SUCCESS(Status))
+    if( NT_SUCCESS( Status ) )
     {
-        *Length = (ULONG)Socket->AsyncContext.Irp->IoStatus.Information;
+        *Length = ( ULONG )Socket->AsyncContext.Irp->IoStatus.Information;
     }
 
     //
     // Free the MDL.
     //
 
-    MmUnlockPages(WskBuffer.Mdl);
+    MmUnlockPages( WskBuffer.Mdl );
 
 Error:
-    IoFreeMdl(WskBuffer.Mdl);
+    IoFreeMdl( WskBuffer.Mdl );
     return Status;
 }
 
@@ -743,13 +743,13 @@ KsSendRecvUdp(
     WSK_BUF WskBuffer;
     WskBuffer.Offset = 0;
     WskBuffer.Length = *Length;
-    WskBuffer.Mdl = IoAllocateMdl(Buffer, (ULONG)WskBuffer.Length, FALSE, FALSE, NULL);
+    WskBuffer.Mdl = IoAllocateMdl( Buffer, ( ULONG )WskBuffer.Length, FALSE, FALSE, NULL );
 
     __try
     {
-        MmProbeAndLockPages(WskBuffer.Mdl, KernelMode, IoWriteAccess);
+        MmProbeAndLockPages( WskBuffer.Mdl, KernelMode, IoWriteAccess );
     }
-    __except (EXCEPTION_EXECUTE_HANDLER)
+    __except( EXCEPTION_EXECUTE_HANDLER )
     {
         Status = STATUS_ACCESS_VIOLATION;
         goto Error;
@@ -759,13 +759,13 @@ KsSendRecvUdp(
     // Reset the async context.
     //
 
-    KspAsyncContextReset(&Socket->AsyncContext);
+    KspAsyncContextReset( &Socket->AsyncContext );
 
     //
     // Send / receive the data.
     //
 
-    if (Send)
+    if( Send )
     {
         Status = Socket->WskDatagramDispatch->WskSendTo(
             Socket->WskSocket,        // Socket
@@ -808,15 +808,15 @@ KsSendRecvUdp(
         );
     }
 
-    KspAsyncContextWaitForCompletion(&Socket->AsyncContext, &Status);
+    KspAsyncContextWaitForCompletion( &Socket->AsyncContext, &Status );
 
     //
     // Set the number of bytes sent / received.
     //
 
-    if (NT_SUCCESS(Status))
+    if( NT_SUCCESS( Status ) )
     {
-        *Length = (ULONG)Socket->AsyncContext.Irp->IoStatus.Information;
+        *Length = ( ULONG )Socket->AsyncContext.Irp->IoStatus.Information;
     }
 
     //
@@ -824,8 +824,8 @@ KsSendRecvUdp(
     //
 
 Error:
-    MmUnlockPages(WskBuffer.Mdl);
-    IoFreeMdl(WskBuffer.Mdl);
+    MmUnlockPages( WskBuffer.Mdl );
+    IoFreeMdl( WskBuffer.Mdl );
     return Status;
 }
 
@@ -838,7 +838,7 @@ KsSend(
     _In_ ULONG Flags
 )
 {
-    return KsSendRecv(Socket, Buffer, Length, Flags, TRUE);
+    return KsSendRecv( Socket, Buffer, Length, Flags, TRUE );
 }
 
 NTSTATUS
@@ -850,7 +850,7 @@ KsRecv(
     _In_ ULONG Flags
 )
 {
-    return KsSendRecv(Socket, Buffer, Length, Flags, FALSE);
+    return KsSendRecv( Socket, Buffer, Length, Flags, FALSE );
 }
 
 NTSTATUS
@@ -863,7 +863,7 @@ KsSendTo(
     _In_ PSOCKADDR RemoteAddress
 )
 {
-    return KsSendRecvUdp(Socket, Buffer, Length, Flags, RemoteAddress, TRUE);
+    return KsSendRecvUdp( Socket, Buffer, Length, Flags, RemoteAddress, TRUE );
 }
 
 NTSTATUS
@@ -876,5 +876,5 @@ KsRecvFrom(
     _In_ PSOCKADDR RemoteAddress
 )
 {
-    return KsSendRecvUdp(Socket, Buffer, Length, Flags, RemoteAddress, FALSE);
+    return KsSendRecvUdp( Socket, Buffer, Length, Flags, RemoteAddress, FALSE );
 }

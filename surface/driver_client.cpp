@@ -1,4 +1,6 @@
 #include "driver_client.h"
+
+#include "log.h"
 #include "WinSystemInfoQuery.h"
 
 #include "../Libs/str.h"
@@ -144,6 +146,25 @@ uint64_t Driver::protect( const uint64_t address, const size_t size, const ulong
     return result;
 }
 
+uint64_t Driver::vad_spoof( uint64_t address, size_t size, ulong_t protect )
+{
+    Packet packet{};
+
+    packet.header.magic = packet_magic;
+    packet.header.type = PacketType::packet_vad_spoof;
+
+    auto& data = packet.data.vad_spoof;
+    data.address = address;
+    data.size = size;
+    data.protect = protect;
+
+    uint64_t result = 0;
+
+    _client->send_packet( _connection, packet, result );
+
+    return result;
+}
+
 uint64_t Driver::free( const uint64_t address )
 {
     Packet packet{};
@@ -171,7 +192,26 @@ uint64_t Driver::write_memory( uint64_t address, void* buffer, size_t size )
     return this->copy_memory( address, ( uint64_t )buffer, size, MemoryMode::write );
 }
 
+uint64_t Driver::kill_server()
+{
+    Packet packet{};
+
+    packet.header.magic = packet_magic;
+    packet.header.type = PacketType::packet_kill;
+
+    auto& data = packet.data.kill;
+    data.kill = 1;
+
+    uint64_t result = 0;
+
+    _client->send_packet( _connection, packet, result );
+
+    return result;
+}
+
 uint64_t Driver::copy_memory
+
+
 (
     const uint64_t   src_address,
     const uint64_t   dest_address,

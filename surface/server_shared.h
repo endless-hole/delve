@@ -3,8 +3,10 @@
 #include "../Libs/types.h"
 
 static uint32_t packet_magic = 0x88429401;
-static uint32_t server_ip    = 0x7F000001;
-static uint16_t server_port  = 45982;
+static uint32_t server_ip = 0x7F000001;
+static uint16_t server_port = 45982;
+
+static uint64_t is_alive = 0x356874;
 
 enum class PacketType
 {
@@ -14,14 +16,17 @@ enum class PacketType
     packet_protect_memory = 72,
     packet_set_target = 12,
     packet_get_peb = 24,
-    packet_completed = 5
+    packet_completed = 5,
+    packet_is_alive = 0,
+    packet_vad_spoof = 82,
+    packet_kill = 49
 };
 
 struct PacketSetTarget
 {
     ulong_t tgt_process_id;
     ulong_t own_process_id;
-    wchar_t process_name[50];
+    wchar_t process_name[ 50 ];
 };
 
 enum class MemoryMode
@@ -51,6 +56,13 @@ struct PacketProtectMemory
     ulong_t  protect;
 };
 
+struct PacketVadSpoof
+{
+    uint64_t address;
+    size_t   size;
+    ulong_t  protect;
+};
+
 struct PacketFreeMemory
 {
     uint64_t address;
@@ -61,9 +73,19 @@ struct PacketGetPeb
     uint64_t dummy;
 };
 
+struct PacketIsAlive
+{
+    uint64_t check;
+};
+
 struct PackedCompleted
 {
     uint64_t result;
+};
+
+struct PacketKill
+{
+    uint8_t kill;
 };
 
 struct PacketHeader
@@ -84,6 +106,9 @@ struct Packet
         PacketProtectMemory protect_memory;
         PacketSetTarget     set_target;
         PacketGetPeb        get_peb;
+        PacketIsAlive       is_alive;
         PackedCompleted     completed;
+        PacketKill          kill;
+        PacketVadSpoof      vad_spoof;
     }                       data;
 };

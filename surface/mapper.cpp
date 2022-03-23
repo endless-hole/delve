@@ -42,7 +42,14 @@ bool_t mmap::map_remote_module( Process* proc, void* in_base, void** out_base, v
     /* get the needed info based off PE type */
     size_t   size_of_img = pe64_get_optional_header( in_base )->SizeOfImage;
     uint64_t sec_align   = pe64_get_optional_header( in_base )->SectionAlignment;
-    uint64_t entry_point = ( uint64_t )pe64_get_entry_point( in_base );
+    uint64_t entry_point = pe64_get_optional_header( in_base )->AddressOfEntryPoint;
+
+    if( entry_point == 0 )
+    {
+        LOG( "Failed to find entry point" );
+        return false;
+    }
+        
 
     if( remote == nullptr )
     {
@@ -105,31 +112,54 @@ bool_t mmap::map_remote_module( Process* proc, void* in_base, void** out_base, v
     /* map the sections */
     PIMAGE_SECTION_HEADER sec_hdr = pe_get_section_header( in_base, 0, NULL );
 
+    LOG( "Looping through sections" );
+
     for( ulong_t i = 1; sec_hdr != NULL; i++ )
     {
         /* calculate the aligned section size */
         ulong_t sec_size = roundup( sec_hdr->Misc.VirtualSize, sec_align );
         ulong_t prot_flags;
 
-        if( sec_hdr->Characteristics & IMAGE_SCN_MEM_READ ) { prot_flags = PAGE_READONLY; }
+        if( sec_hdr->Characteristics & IMAGE_SCN_MEM_READ )
+        {
+	        prot_flags = PAGE_READONLY;
+        }
 
-        if( sec_hdr->Characteristics & IMAGE_SCN_MEM_WRITE ) { prot_flags = PAGE_READWRITE; }
+        if( sec_hdr->Characteristics & IMAGE_SCN_MEM_WRITE )
+        {
+	        prot_flags = PAGE_READWRITE;
+        }
 
-        if( sec_hdr->Characteristics & IMAGE_SCN_MEM_EXECUTE ) { prot_flags = PAGE_EXECUTE_READWRITE; }
+        if( sec_hdr->Characteristics & IMAGE_SCN_MEM_EXECUTE )
+        {
+	        prot_flags = PAGE_EXECUTE_READWRITE;
+        }
 
         if( sec_hdr->Characteristics & IMAGE_SCN_MEM_WRITE &&
-            sec_hdr->Characteristics & IMAGE_SCN_MEM_EXECUTE ) { prot_flags = PAGE_EXECUTE_READWRITE; }
+            sec_hdr->Characteristics & IMAGE_SCN_MEM_EXECUTE )
+        {
+            prot_flags = PAGE_EXECUTE_READWRITE;
+        }
 
         /* replace the content with junk */
-        if( str_astri( ( char* )sec_hdr->Name, ( char* )"rsrc" ) != NULL ||
-            str_astri( ( char* )sec_hdr->Name, ( char* )"reloc" ) != NULL ||
-            str_astri( ( char* )sec_hdr->Name, ( char* )"crt" ) != NULL )
+        if( str_astri( ( char* )sec_hdr->Name, ( char* )"rsrc" ) != NULL 
+            || str_astri( ( char* )sec_hdr->Name, ( char* )"reloc" ) != NULL 
+            || str_astri( ( char* )sec_hdr->Name, ( char* )"crt" ) != NULL
+            || str_astri( ( char* )sec_hdr->Name, ( char* )"retplne" ) != NULL )
         {
             fill_with_random( ( uint8_t* )in_base + sec_hdr->PointerToRawData, sec_hdr->SizeOfRawData );
         }
 
         proc->write_memory( curr_addr, ( uint8_t* )in_base + sec_hdr->PointerToRawData, sec_hdr->SizeOfRawData );
-        proc->protect( curr_addr, sec_size, prot_flags );
+
+        if( prot_flags == PAGE_EXECUTE_READWRITE )
+        {
+            proc->vad_spoof( curr_addr, sec_size, 0 );
+        }
+        else if( prot_flags != PAGE_READWRITE )
+        {
+            proc->protect( curr_addr, sec_size, prot_flags );
+        }
 
         /* update the current address pointer */
         curr_addr += sec_size;
@@ -140,8 +170,14 @@ bool_t mmap::map_remote_module( Process* proc, void* in_base, void** out_base, v
 
     *out_base = remote;
 
-    if( ( uint8_t* )remote + entry_point == remote ) { *out_entrypoint = NULL; }
-    else { *out_entrypoint = ( uint8_t* )remote + entry_point; }
+    if( ( uint8_t* )remote + entry_point == remote )
+    {
+        *out_entrypoint = NULL;
+    }
+    else
+    { 
+        *out_entrypoint = ( uint8_t* )remote + entry_point;
+    }
 
     mm_hfree( rnd_buf );
 

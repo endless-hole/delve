@@ -57,7 +57,7 @@ KspUtilFreeAddrInfoEx(
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!! NOTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //
 
-PKSOCKET KsArray[SOCKETFD_MAX] = { 0 };
+PKSOCKET KsArray[ SOCKETFD_MAX ] = { 0 };
 ULONG    KsIndex = 0;
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,7 +77,7 @@ KspUtilAddrInfoToAddrInfoEx(
     // Convert NULL input into NULL output.
     //
 
-    if (AddrInfo == NULL)
+    if( AddrInfo == NULL )
     {
         *AddrInfoEx = NULL;
         return STATUS_SUCCESS;
@@ -87,9 +87,9 @@ KspUtilAddrInfoToAddrInfoEx(
     // Allocate memory for the output structure.
     //
 
-    PADDRINFOEXW Result = ExAllocatePoolWithTag(PagedPool, sizeof(ADDRINFOEXW), MEMORY_TAG);
+    PADDRINFOEXW Result = ExAllocatePoolWithTag( PagedPool, sizeof( ADDRINFOEXW ), MEMORY_TAG );
 
-    if (Result == NULL)
+    if( Result == NULL )
     {
         Status = STATUS_INSUFFICIENT_RESOURCES;
         goto Error1;
@@ -99,7 +99,7 @@ KspUtilAddrInfoToAddrInfoEx(
     // Copy numeric values.
     //
 
-    RtlZeroMemory(Result, sizeof(ADDRINFOEXW));
+    RtlZeroMemory( Result, sizeof( ADDRINFOEXW ) );
     Result->ai_flags = AddrInfo->ai_flags;
     Result->ai_family = AddrInfo->ai_family;
     Result->ai_socktype = AddrInfo->ai_socktype;
@@ -113,13 +113,13 @@ KspUtilAddrInfoToAddrInfoEx(
     ANSI_STRING CanonicalNameAnsi;
     UNICODE_STRING CanonicalNameUnicode;
 
-    if (AddrInfo->ai_canonname)
+    if( AddrInfo->ai_canonname )
     {
-        RtlInitAnsiString(&CanonicalNameAnsi, AddrInfo->ai_canonname);
+        RtlInitAnsiString( &CanonicalNameAnsi, AddrInfo->ai_canonname );
 
-        Status = RtlAnsiStringToUnicodeString(&CanonicalNameUnicode, &CanonicalNameAnsi, TRUE);
+        Status = RtlAnsiStringToUnicodeString( &CanonicalNameUnicode, &CanonicalNameAnsi, TRUE );
 
-        if (!NT_SUCCESS(Status))
+        if( !NT_SUCCESS( Status ) )
         {
             goto Error2;
         }
@@ -138,9 +138,9 @@ KspUtilAddrInfoToAddrInfoEx(
     //
 
     PADDRINFOEXW NextAddrInfo;
-    Status = KspUtilAddrInfoToAddrInfoEx(AddrInfo->ai_next, &NextAddrInfo);
+    Status = KspUtilAddrInfoToAddrInfoEx( AddrInfo->ai_next, &NextAddrInfo );
 
-    if (!NT_SUCCESS(Status))
+    if( !NT_SUCCESS( Status ) )
     {
         goto Error3;
     }
@@ -156,10 +156,10 @@ KspUtilAddrInfoToAddrInfoEx(
     return Status;
 
 Error3:
-    RtlFreeAnsiString(&CanonicalNameAnsi);
+    RtlFreeAnsiString( &CanonicalNameAnsi );
 
 Error2:
-    ExFreePoolWithTag(Result, MEMORY_TAG);
+    ExFreePoolWithTag( Result, MEMORY_TAG );
 
 Error1:
     return Status;
@@ -178,7 +178,7 @@ KspUtilAddrInfoExToAddrInfo(
     // Convert NULL input into NULL output.
     //
 
-    if (AddrInfoEx == NULL)
+    if( AddrInfoEx == NULL )
     {
         *AddrInfo = NULL;
         return STATUS_SUCCESS;
@@ -188,9 +188,9 @@ KspUtilAddrInfoExToAddrInfo(
     // Allocate memory for the output structure.
     //
 
-    PADDRINFOA Result = ExAllocatePoolWithTag(PagedPool, sizeof(ADDRINFOA), MEMORY_TAG);
+    PADDRINFOA Result = ExAllocatePoolWithTag( PagedPool, sizeof( ADDRINFOA ), MEMORY_TAG );
 
-    if (Result == NULL)
+    if( Result == NULL )
     {
         Status = STATUS_INSUFFICIENT_RESOURCES;
         goto Error1;
@@ -200,7 +200,7 @@ KspUtilAddrInfoExToAddrInfo(
     // Copy numeric values.
     //
 
-    RtlZeroMemory(Result, sizeof(ADDRINFOA));
+    RtlZeroMemory( Result, sizeof( ADDRINFOA ) );
     Result->ai_flags = AddrInfoEx->ai_flags;
     Result->ai_family = AddrInfoEx->ai_family;
     Result->ai_socktype = AddrInfoEx->ai_socktype;
@@ -214,12 +214,12 @@ KspUtilAddrInfoExToAddrInfo(
     UNICODE_STRING CanonicalNameUnicode;
     ANSI_STRING CanonicalNameAnsi;
 
-    if (AddrInfoEx->ai_canonname)
+    if( AddrInfoEx->ai_canonname )
     {
-        RtlInitUnicodeString(&CanonicalNameUnicode, AddrInfoEx->ai_canonname);
-        Status = RtlUnicodeStringToAnsiString(&CanonicalNameAnsi, &CanonicalNameUnicode, TRUE);
+        RtlInitUnicodeString( &CanonicalNameUnicode, AddrInfoEx->ai_canonname );
+        Status = RtlUnicodeStringToAnsiString( &CanonicalNameAnsi, &CanonicalNameUnicode, TRUE );
 
-        if (!NT_SUCCESS(Status))
+        if( !NT_SUCCESS( Status ) )
         {
             goto Error2;
         }
@@ -238,9 +238,9 @@ KspUtilAddrInfoExToAddrInfo(
     //
 
     PADDRINFOA NextAddrInfo;
-    Status = KspUtilAddrInfoExToAddrInfo(AddrInfoEx->ai_next, &NextAddrInfo);
+    Status = KspUtilAddrInfoExToAddrInfo( AddrInfoEx->ai_next, &NextAddrInfo );
 
-    if (!NT_SUCCESS(Status))
+    if( !NT_SUCCESS( Status ) )
     {
         goto Error3;
     }
@@ -256,10 +256,10 @@ KspUtilAddrInfoExToAddrInfo(
     return Status;
 
 Error3:
-    RtlFreeAnsiString(&CanonicalNameAnsi);
+    RtlFreeAnsiString( &CanonicalNameAnsi );
 
 Error2:
-    ExFreePoolWithTag(Result, MEMORY_TAG);
+    ExFreePoolWithTag( Result, MEMORY_TAG );
 
 Error1:
     return Status;
@@ -275,27 +275,27 @@ KspUtilFreeAddrInfo(
     // Free all structures recursively.
     //
 
-    if (AddrInfo->ai_next)
+    if( AddrInfo->ai_next )
     {
-        KspUtilFreeAddrInfo(AddrInfo->ai_next);
+        KspUtilFreeAddrInfo( AddrInfo->ai_next );
     }
 
     //
     // Free the canonical name buffer.
     //
 
-    if (AddrInfo->ai_canonname)
+    if( AddrInfo->ai_canonname )
     {
         ANSI_STRING CanonicalName;
-        RtlInitAnsiString(&CanonicalName, AddrInfo->ai_canonname);
-        RtlFreeAnsiString(&CanonicalName);
+        RtlInitAnsiString( &CanonicalName, AddrInfo->ai_canonname );
+        RtlFreeAnsiString( &CanonicalName );
     }
 
     //
     // Finally, free the structure itself.
     //
 
-    ExFreePoolWithTag(AddrInfo, MEMORY_TAG);
+    ExFreePoolWithTag( AddrInfo, MEMORY_TAG );
 }
 
 VOID
@@ -308,54 +308,54 @@ KspUtilFreeAddrInfoEx(
     // Free all structures recursively.
     //
 
-    if (AddrInfo->ai_next)
+    if( AddrInfo->ai_next )
     {
-        KspUtilFreeAddrInfoEx(AddrInfo->ai_next);
+        KspUtilFreeAddrInfoEx( AddrInfo->ai_next );
     }
 
     //
     // Free the canonical name buffer.
     //
 
-    if (AddrInfo->ai_canonname)
+    if( AddrInfo->ai_canonname )
     {
         UNICODE_STRING CanonicalName;
-        RtlInitUnicodeString(&CanonicalName, AddrInfo->ai_canonname);
-        RtlFreeUnicodeString(&CanonicalName);
+        RtlInitUnicodeString( &CanonicalName, AddrInfo->ai_canonname );
+        RtlFreeUnicodeString( &CanonicalName );
     }
 
     //
     // Finally, free the structure itself.
     //
 
-    ExFreePoolWithTag(AddrInfo, MEMORY_TAG);
+    ExFreePoolWithTag( AddrInfo, MEMORY_TAG );
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Public functions.
 //////////////////////////////////////////////////////////////////////////
 
-uint32_t htonl(uint32_t hostlong)
+uint32_t htonl( uint32_t hostlong )
 {
-    return RtlUlongByteSwap(hostlong);
+    return RtlUlongByteSwap( hostlong );
 }
 
-uint16_t htons(uint16_t hostshort)
+uint16_t htons( uint16_t hostshort )
 {
-    return RtlUshortByteSwap(hostshort);
+    return RtlUshortByteSwap( hostshort );
 }
 
-uint32_t ntohl(uint32_t netlong)
+uint32_t ntohl( uint32_t netlong )
 {
-    return RtlUlongByteSwap(netlong);
+    return RtlUlongByteSwap( netlong );
 }
 
-uint16_t ntohs(uint16_t netshort)
+uint16_t ntohs( uint16_t netshort )
 {
-    return RtlUshortByteSwap(netshort);
+    return RtlUshortByteSwap( netshort );
 }
 
-int getaddrinfo(const char* node, const char* service, const struct addrinfo* hints, struct addrinfo** res)
+int getaddrinfo( const char* node, const char* service, const struct addrinfo* hints, struct addrinfo** res )
 {
     NTSTATUS Status;
 
@@ -367,12 +367,12 @@ int getaddrinfo(const char* node, const char* service, const struct addrinfo* hi
     UNICODE_STRING NodeNameUnicode;
     PUNICODE_STRING NodeName = NULL;
 
-    if (node)
+    if( node )
     {
-        RtlInitAnsiString(&NodeNameAnsi, node);
-        Status = RtlAnsiStringToUnicodeString(&NodeNameUnicode, &NodeNameAnsi, TRUE);
+        RtlInitAnsiString( &NodeNameAnsi, node );
+        Status = RtlAnsiStringToUnicodeString( &NodeNameUnicode, &NodeNameAnsi, TRUE );
 
-        if (!NT_SUCCESS(Status))
+        if( !NT_SUCCESS( Status ) )
         {
             goto Error1;
         }
@@ -388,12 +388,12 @@ int getaddrinfo(const char* node, const char* service, const struct addrinfo* hi
     UNICODE_STRING ServiceNameUnicode;
     PUNICODE_STRING ServiceName = NULL;
 
-    if (service)
+    if( service )
     {
-        RtlInitAnsiString(&ServiceNameAnsi, service);
-        Status = RtlAnsiStringToUnicodeString(&ServiceNameUnicode, &ServiceNameAnsi, TRUE);
+        RtlInitAnsiString( &ServiceNameAnsi, service );
+        Status = RtlAnsiStringToUnicodeString( &ServiceNameUnicode, &ServiceNameAnsi, TRUE );
 
-        if (!NT_SUCCESS(Status))
+        if( !NT_SUCCESS( Status ) )
         {
             goto Error2;
         }
@@ -406,9 +406,9 @@ int getaddrinfo(const char* node, const char* service, const struct addrinfo* hi
     //
 
     PADDRINFOEXW Hints;
-    Status = KspUtilAddrInfoToAddrInfoEx((PADDRINFOA)hints, &Hints);
+    Status = KspUtilAddrInfoToAddrInfoEx( ( PADDRINFOA )hints, &Hints );
 
-    if (!NT_SUCCESS(Status))
+    if( !NT_SUCCESS( Status ) )
     {
         goto Error3;
     }
@@ -418,15 +418,15 @@ int getaddrinfo(const char* node, const char* service, const struct addrinfo* hi
     //
 
     PADDRINFOEXW Result;
-    Status = KsGetAddrInfo(NodeName, ServiceName, Hints, &Result);
+    Status = KsGetAddrInfo( NodeName, ServiceName, Hints, &Result );
 
     //
     // Free the memory of the converted "Hints".
     //
 
-    KspUtilFreeAddrInfoEx(Hints);
+    KspUtilFreeAddrInfoEx( Hints );
 
-    if (!NT_SUCCESS(Status))
+    if( !NT_SUCCESS( Status ) )
     {
         goto Error3;
     }
@@ -435,15 +435,15 @@ int getaddrinfo(const char* node, const char* service, const struct addrinfo* hi
     // Convert the result "ADDRINFOEXW" to the "struct addrinfo".
     //
 
-    Status = KspUtilAddrInfoExToAddrInfo(Result, res);
+    Status = KspUtilAddrInfoExToAddrInfo( Result, res );
 
     //
     // Free the original result.
     //
 
-    KsFreeAddrInfo(Result);
+    KsFreeAddrInfo( Result );
 
-    if (!NT_SUCCESS(Status))
+    if( !NT_SUCCESS( Status ) )
     {
         goto Error3;
     }
@@ -451,41 +451,41 @@ int getaddrinfo(const char* node, const char* service, const struct addrinfo* hi
     return STATUS_SUCCESS;
 
 Error3:
-    RtlFreeUnicodeString(&ServiceNameUnicode);
+    RtlFreeUnicodeString( &ServiceNameUnicode );
 
 Error2:
-    RtlFreeUnicodeString(&NodeNameUnicode);
+    RtlFreeUnicodeString( &NodeNameUnicode );
 
 Error1:
     return Status;
 }
 
-void freeaddrinfo(struct addrinfo* res)
+void freeaddrinfo( struct addrinfo* res )
 {
     //
     // Call our implementation.
     //
 
-    KspUtilFreeAddrInfo(res);
+    KspUtilFreeAddrInfo( res );
 }
 
-int socket_connection(int domain, int type, int protocol)
+int socket_connection( int domain, int type, int protocol )
 {
     NTSTATUS Status;
     PKSOCKET Socket;
 
     Status = KsCreateConnectionSocket(
         &Socket,
-        (ADDRESS_FAMILY)domain,
-        (USHORT)type,
-        (ULONG)protocol
+        ( ADDRESS_FAMILY )domain,
+        ( USHORT )type,
+        ( ULONG )protocol
     );
 
-    if (NT_SUCCESS(Status))
+    if( NT_SUCCESS( Status ) )
     {
-        int sockfd = TO_SOCKETFD(KsIndex++);
+        int sockfd = TO_SOCKETFD( KsIndex++ );
 
-        KsArray[FROM_SOCKETFD(sockfd)] = Socket;
+        KsArray[ FROM_SOCKETFD( sockfd ) ] = Socket;
 
         return sockfd;
     }
@@ -493,7 +493,7 @@ int socket_connection(int domain, int type, int protocol)
     return -1;
 }
 
-int socket_listen(int domain, int type, int protocol)
+int socket_listen( int domain, int type, int protocol )
 {
     NTSTATUS Status;
     PKSOCKET Socket;
@@ -505,16 +505,16 @@ int socket_listen(int domain, int type, int protocol)
 
     Status = KsCreateListenSocket(
         &Socket,
-        (ADDRESS_FAMILY)domain,
-        (USHORT)type,
-        protocol ? (ULONG)protocol : IPPROTO_TCP
+        ( ADDRESS_FAMILY )domain,
+        ( USHORT )type,
+        protocol ? ( ULONG )protocol : IPPROTO_TCP
     );
 
-    if (NT_SUCCESS(Status))
+    if( NT_SUCCESS( Status ) )
     {
-        int sockfd = TO_SOCKETFD(KsIndex++);
+        int sockfd = TO_SOCKETFD( KsIndex++ );
 
-        KsArray[FROM_SOCKETFD(sockfd)] = Socket;
+        KsArray[ FROM_SOCKETFD( sockfd ) ] = Socket;
 
         return sockfd;
     }
@@ -522,23 +522,23 @@ int socket_listen(int domain, int type, int protocol)
     return -1;
 }
 
-int socket_datagram(int domain, int type, int protocol)
+int socket_datagram( int domain, int type, int protocol )
 {
     NTSTATUS Status;
     PKSOCKET Socket;
 
     Status = KsCreateDatagramSocket(
         &Socket,
-        (ADDRESS_FAMILY)domain,
-        (USHORT)type,
-        (ULONG)protocol
+        ( ADDRESS_FAMILY )domain,
+        ( USHORT )type,
+        ( ULONG )protocol
     );
 
-    if (NT_SUCCESS(Status))
+    if( NT_SUCCESS( Status ) )
     {
-        int sockfd = TO_SOCKETFD(KsIndex++);
+        int sockfd = TO_SOCKETFD( KsIndex++ );
 
-        KsArray[FROM_SOCKETFD(sockfd)] = Socket;
+        KsArray[ FROM_SOCKETFD( sockfd ) ] = Socket;
 
         return sockfd;
     }
@@ -546,55 +546,55 @@ int socket_datagram(int domain, int type, int protocol)
     return -1;
 }
 
-int connect(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
+int connect( int sockfd, const struct sockaddr* addr, socklen_t addrlen )
 {
-    UNREFERENCED_PARAMETER(addrlen);
+    UNREFERENCED_PARAMETER( addrlen );
 
     NTSTATUS Status;
-    PKSOCKET Socket = KsArray[FROM_SOCKETFD(sockfd)];
+    PKSOCKET Socket = KsArray[ FROM_SOCKETFD( sockfd ) ];
 
-    Status = KsConnect(Socket, (PSOCKADDR)addr);
+    Status = KsConnect( Socket, ( PSOCKADDR )addr );
 
-    return NT_SUCCESS(Status)
+    return NT_SUCCESS( Status )
         ? 0
         : -1;
 }
 
-int listen(int sockfd, int backlog)
+int listen( int sockfd, int backlog )
 {
-    UNREFERENCED_PARAMETER(sockfd);
-    UNREFERENCED_PARAMETER(backlog);
+    UNREFERENCED_PARAMETER( sockfd );
+    UNREFERENCED_PARAMETER( backlog );
     return 0;
 }
 
-int bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
+int bind( int sockfd, const struct sockaddr* addr, socklen_t addrlen )
 {
-    UNREFERENCED_PARAMETER(addrlen);
+    UNREFERENCED_PARAMETER( addrlen );
 
     NTSTATUS Status;
-    PKSOCKET Socket = KsArray[FROM_SOCKETFD(sockfd)];
+    PKSOCKET Socket = KsArray[ FROM_SOCKETFD( sockfd ) ];
 
-    Status = KsBind(Socket, (PSOCKADDR)addr);
+    Status = KsBind( Socket, ( PSOCKADDR )addr );
 
-    return NT_SUCCESS(Status)
+    return NT_SUCCESS( Status )
         ? 0
         : -1;
 }
 
-int accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen)
+int accept( int sockfd, struct sockaddr* addr, socklen_t* addrlen )
 {
     NTSTATUS Status;
-    PKSOCKET Socket = KsArray[FROM_SOCKETFD(sockfd)];
+    PKSOCKET Socket = KsArray[ FROM_SOCKETFD( sockfd ) ];
 
     PKSOCKET NewSocket;
-    Status = KsAccept(Socket, &NewSocket, NULL, (PSOCKADDR)addr);
-    *addrlen = sizeof(SOCKADDR);
+    Status = KsAccept( Socket, &NewSocket, NULL, ( PSOCKADDR )addr );
+    *addrlen = sizeof( SOCKADDR );
 
-    if (NT_SUCCESS(Status))
+    if( NT_SUCCESS( Status ) )
     {
-        int newsockfd = TO_SOCKETFD(KsIndex++);
+        int newsockfd = TO_SOCKETFD( KsIndex++ );
 
-        KsArray[FROM_SOCKETFD(newsockfd)] = NewSocket;
+        KsArray[ FROM_SOCKETFD( newsockfd ) ] = NewSocket;
 
         return newsockfd;
     }
@@ -602,73 +602,73 @@ int accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen)
     return -1;
 }
 
-int send(int sockfd, const void* buf, size_t len, int flags)
+int send( int sockfd, const void* buf, size_t len, int flags )
 {
     NTSTATUS Status;
-    PKSOCKET Socket = KsArray[FROM_SOCKETFD(sockfd)];
+    PKSOCKET Socket = KsArray[ FROM_SOCKETFD( sockfd ) ];
 
-    ULONG Length = (ULONG)len;
-    Status = KsSend(Socket, (PVOID)buf, &Length, (ULONG)flags);
+    ULONG Length = ( ULONG )len;
+    Status = KsSend( Socket, ( PVOID )buf, &Length, ( ULONG )flags );
 
-    return NT_SUCCESS(Status)
-        ? (int)Length
+    return NT_SUCCESS( Status )
+        ? ( int )Length
         : -1;
 }
 
-int sendto(int sockfd, const void* buf, size_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen)
+int sendto( int sockfd, const void* buf, size_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen )
 {
-    UNREFERENCED_PARAMETER(addrlen);
+    UNREFERENCED_PARAMETER( addrlen );
 
     NTSTATUS Status;
-    PKSOCKET Socket = KsArray[FROM_SOCKETFD(sockfd)];
+    PKSOCKET Socket = KsArray[ FROM_SOCKETFD( sockfd ) ];
 
-    ULONG Length = (ULONG)len;
-    Status = KsSendTo(Socket, (PVOID)buf, &Length, (ULONG)flags, (PSOCKADDR)dest_addr);
+    ULONG Length = ( ULONG )len;
+    Status = KsSendTo( Socket, ( PVOID )buf, &Length, ( ULONG )flags, ( PSOCKADDR )dest_addr );
 
-    return NT_SUCCESS(Status)
-        ? (int)Length
+    return NT_SUCCESS( Status )
+        ? ( int )Length
         : -1;
 }
 
-int recv(int sockfd, void* buf, size_t len, int flags)
+int recv( int sockfd, void* buf, size_t len, int flags )
 {
     NTSTATUS Status;
-    PKSOCKET Socket = KsArray[FROM_SOCKETFD(sockfd)];
+    PKSOCKET Socket = KsArray[ FROM_SOCKETFD( sockfd ) ];
 
-    ULONG Length = (ULONG)len;
-    Status = KsRecv(Socket, (PVOID)buf, &Length, (ULONG)flags);
+    ULONG Length = ( ULONG )len;
+    Status = KsRecv( Socket, ( PVOID )buf, &Length, ( ULONG )flags );
 
-    return NT_SUCCESS(Status)
-        ? (int)Length
+    return NT_SUCCESS( Status )
+        ? ( int )Length
         : -1;
 }
 
-int recvfrom(int sockfd, void* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen)
+int recvfrom( int sockfd, void* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen )
 {
-    UNREFERENCED_PARAMETER(addrlen);
+    UNREFERENCED_PARAMETER( addrlen );
 
     NTSTATUS Status;
-    PKSOCKET Socket = KsArray[FROM_SOCKETFD(sockfd)];
+    PKSOCKET Socket = KsArray[ FROM_SOCKETFD( sockfd ) ];
 
-    ULONG Length = (ULONG)len;
-    Status = KsSendTo(Socket, (PVOID)buf, &Length, (ULONG)flags, (PSOCKADDR)src_addr);
-    *addrlen = sizeof(SOCKADDR);
+    ULONG Length = ( ULONG )len;
+    Status = KsSendTo( Socket, ( PVOID )buf, &Length, ( ULONG )flags, ( PSOCKADDR )src_addr );
+    *addrlen = sizeof( SOCKADDR );
 
-    return NT_SUCCESS(Status)
-        ? (int)Length
+    return NT_SUCCESS( Status )
+        ? ( int )Length
         : -1;
 }
 
-int closesocket(int sockfd)
+int closesocket( int sockfd )
 {
     NTSTATUS Status;
-    PKSOCKET Socket = KsArray[FROM_SOCKETFD(sockfd)];
+    PKSOCKET Socket = KsArray[ FROM_SOCKETFD( sockfd ) ];
 
-    Status = KsCloseSocket(Socket);
+    Status = KsCloseSocket( Socket );
 
-    KsArray[FROM_SOCKETFD(sockfd)] = NULL;
+    KsArray[ FROM_SOCKETFD( sockfd ) ] = NULL;
 
-    return NT_SUCCESS(Status)
+    return NT_SUCCESS( Status )
         ? 0
         : -1;
 }

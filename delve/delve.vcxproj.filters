@@ -44,6 +44,15 @@
     <ClCompile Include="packet_handler.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="memory\vad_routines.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="memory\memory.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="memory\pattern.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="log.h">
@@ -70,5 +79,11 @@
     <ClInclude Include="process\process.h">
       <Filter>Main\process</Filter>
     </ClInclude>
+    <ClInclude Include="memory\undoc_structs.h" />
+    <ClInclude Include="memory\vad_routines.h" />
+    <ClInclude Include="memory\memory.hpp" />
+    <ClInclude Include="memory\pattern.hpp" />
+    <ClInclude Include="memory\nt.hpp" />
+    <ClInclude Include="memory\rwmemory.hpp" />
   </ItemGroup>
 </Project>

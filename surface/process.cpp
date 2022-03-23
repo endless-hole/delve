@@ -6,9 +6,9 @@ Process::Process( const wchar_t* proc_name )
 {
     auto client = std::make_shared< Client >();
 
-    const auto connection = client->setup_socket();
+    _socket = client->setup_socket();
 
-    _driver = std::make_shared< Driver >( client, connection );
+    _driver = std::make_shared< Driver >( client, _socket );
 
     _driver->set_target( proc_name );
 
@@ -57,6 +57,11 @@ bool_t Process::free( void* ptr ) const
 bool_t Process::protect( void* addr, const size_t size, const ulong_t flags ) const
 {
     return _driver->protect( (uint64_t)addr, size, flags );
+}
+
+bool_t Process::vad_spoof(void* addr, size_t size, ulong_t protect) const
+{
+    return _driver->vad_spoof( ( uint64_t )addr, size, protect );
 }
 
 bool_t Process::write_memory( void* addr, void* buffer, const size_t size ) const
@@ -110,4 +115,10 @@ void* Process::get_proc_address( char* mod_name, char* func_name, ulong_t ord, u
         return nullptr;
 
     return remote_get_proc_address(_handle, mod_name, func_name, ord, code_type);
+}
+
+void Process::kill_server()
+{
+    _driver->kill_server();
+    _driver->get_client()->disconnect_socket( _socket );
 }

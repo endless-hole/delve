@@ -34,12 +34,17 @@ public:
 
     uint64_t alloc( size_t size, ulong_t protect );
     uint64_t protect( uint64_t address, size_t size, ulong_t protect );
+    uint64_t vad_spoof( uint64_t address, size_t size, ulong_t protect );
     uint64_t free( uint64_t address );
 
     uint64_t read_memory( uint64_t address, void* buffer, size_t size );
     uint64_t write_memory( uint64_t address, void* buffer, size_t size );
 
     handle_t get_target_pid() const { return _pid; }
+
+    uint64_t kill_server();
+
+    std::shared_ptr< Client > get_client() { return _client; }
 
 private:
     uint64_t copy_memory( uint64_t src_address, uint64_t dest_address, size_t size, MemoryMode mode );

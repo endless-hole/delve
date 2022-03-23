@@ -2,9 +2,6 @@
 #include "../Libs/cnsl.h"
 #include "../Libs/proc.h"
 
-#pragma comment(lib, "ntdll64.lib")
-#pragma comment(lib, "Libs64.lib")
-
 typedef struct
 {
 	KernelCallbackProc* cb_entry_pointer;
@@ -29,9 +26,8 @@ void unhook_KernelCallbackTable(void)
 
 NTSTATUS NTAPI entrypoint_onKernelCallback(PVOID dummy)
 {
-#ifndef SUPPRESS_DBG_MSG
 	cnsl_alloc();
-#endif
+
 
 	dbg_msg((char*)"mapped dll entered entrypoint without new thread.");
 

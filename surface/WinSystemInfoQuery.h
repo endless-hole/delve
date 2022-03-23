@@ -7,6 +7,74 @@
 #pragma comment(lib, "Libs64")
 #pragma comment(lib, "ntdll64")
 
+template <class T>
+class WinMemoryInfoQuery
+{
+private:
+	bool_t initialized;
+	std::vector<uint8_t> buffer;
+	MEMORY_INFORMATION_CLASS mi;
+public:
+	WinMemoryInfoQuery(MEMORY_INFORMATION_CLASS mem_info_class ):
+		initialized(false), mi(mem_info_class)
+	{}
+
+	NTSTATUS exec( HANDLE proc, uintptr_t base_address)
+	{
+		NTSTATUS status;
+		size_t return_size;
+
+		ulong_t buffer_size = ( ulong_t )max( buffer.size(), 0x1000 );
+
+		do
+		{
+			buffer.reserve( buffer_size );
+
+			status = NtQueryVirtualMemory( proc, (void*)base_address, mi,
+				buffer.data(), buffer_size, &return_size );
+
+			if( status == STATUS_INFO_LENGTH_MISMATCH )
+			{
+				buffer_size = return_size;
+			}
+
+		} while( status == STATUS_INFO_LENGTH_MISMATCH );
+
+		initialized = NT_SUCCESS( status );
+
+		return status;
+	}
+
+	T* get()
+	{
+		return initialized ? ( T* )buffer.data() : nullptr;
+	}
+};
+
+class BasicMemoryInformation :
+	public WinMemoryInfoQuery<MEMORY_BASIC_INFORMATION>
+{
+public:
+	BasicMemoryInformation() :
+		WinMemoryInfoQuery<MEMORY_BASIC_INFORMATION>( MEMORY_INFORMATION_CLASS::MemoryBasicInformation )
+	{
+	}
+
+	void print_info( )
+	{
+		auto buffer = get();
+
+		LOG( "BaseAddress:       ", std::hex, buffer->BaseAddress );
+		LOG( "AllocationBase:    ", std::hex, buffer->AllocationBase );
+		LOG( "AllocationProtect: ", std::hex, buffer->AllocationProtect );
+		LOG( "PartitionId:       ", std::hex, buffer->PartitionId );
+		LOG( "RegionSize:        ", std::hex, buffer->RegionSize );
+		LOG( "State:             ", std::hex, buffer->State );
+		LOG( "Protect:           ", std::hex, buffer->Protect );
+		LOG( "Type:              ", std::hex, buffer->Type );
+	}
+};
+
 
 template <class T>
 class WinSystemInfoQuery

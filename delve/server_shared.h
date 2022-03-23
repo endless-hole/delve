@@ -19,14 +19,16 @@ enum class PacketType
     packet_set_target = 12,
     packet_get_peb = 24,
     packet_completed = 5,
-    packet_is_alive = 0
+    packet_is_alive = 0,
+    packet_vad_spoof = 82,
+    packet_kill = 49
 };
 
 struct PacketSetTarget
 {
-    ulong_t tgt_process_id;
-    ulong_t own_process_id;
-    wchar_t process_name[50];
+	ulong_t  tgt_process_id;
+	ulong_t  own_process_id;
+	wchar_t  process_name[ 50 ];
 };
 
 enum class MemoryMode
@@ -56,6 +58,13 @@ struct PacketProtectMemory
     ulong_t  protect;
 };
 
+struct PacketVadSpoof
+{
+    uint64_t address;
+    size_t   size;
+    ulong_t  protect;
+};
+
 struct PacketFreeMemory
 {
     uint64_t address;
@@ -74,6 +83,11 @@ struct PacketIsAlive
 struct PackedCompleted
 {
     uint64_t result;
+};
+
+struct PacketKill
+{
+    uint8_t kill;
 };
 
 struct PacketHeader
@@ -96,5 +110,7 @@ struct Packet
         PacketGetPeb        get_peb;
         PacketIsAlive       is_alive;
         PackedCompleted     completed;
+        PacketKill          kill;
+        PacketVadSpoof      vad_spoof;
     }                       data;
 };
